@@ -48,8 +48,9 @@ qa_chain = RetrievalQA.from_chain_type(
     return_source_documents=True
 )
 
-# Variabile globale per salvare il transcript (solo per scopi dimostrativi)
-transcript_global = []
+# Variabili globali
+transcript_global = []        # Per salvare il transcript da ElevenLabs
+conversation_memory = []      # Per memorizzare le coppie domanda-risposta della chat
 
 # Funzioni helper per recuperare le conversazioni da ElevenLabs
 def get_last_conversation(agent_id: str, api_key: str):
@@ -78,19 +79,32 @@ from fastapi.staticfiles import StaticFiles
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-
 # Modello Pydantic per la richiesta Q&A
 class QARequest(BaseModel):
     question: str
 
 @app.post("/api/qa")
 def qa_endpoint(request: QARequest):
+    global conversation_memory
     if not request.question:
         raise HTTPException(status_code=400, detail="La domanda è obbligatoria.")
-    # Crea il prompt concatenando il system prompt e la domanda dell'utente
-    prompt_text = SYSTEM_PROMPT.strip() + "\n\nDomanda: " + request.question.strip()
+    
+    # Costruisci la storia della conversazione con le coppie domanda-risposta salvate
+    chat_history_str = ""
+    for entry in conversation_memory:
+        chat_history_str += f"Domanda: {entry['question']}\nRisposta: {entry['answer']}\n"
+    
+    # Crea il prompt unendo il system prompt, la storia della conversazione e la nuova domanda
+    prompt_text = SYSTEM_PROMPT.strip() + "\n\n" + chat_history_str + "Domanda: " + request.question.strip()
+    
     result = qa_chain.invoke(prompt_text)
     answer = result["result"] if isinstance(result, dict) and "result" in result else result
+
+    # Salva la nuova coppia domanda-risposta nella memoria della chat
+    conversation_memory.append({
+        "question": request.question.strip(),
+        "answer": answer
+    })
 
     # Estrai le fonti (se presenti)
     source_docs = result.get("source_documents", [])

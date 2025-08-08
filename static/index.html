@@ -3,135 +3,464 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Assistente Legale</title>
-  <!-- Bootstrap CSS (lasciato per compatibilità con il widget) -->
+  <title>Assistente Legale Professionale</title>
+
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Tailwind CSS CDN -->
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    /* Container del widget: centrato orizzontalmente, ancorato in alto */
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    /* Professional color scheme */
+    .bg-legal-primary { background-color: #1e40af; }
+    .bg-legal-secondary { background-color: #374151; }
+    .text-legal-primary { color: #1e40af; }
+    .text-legal-secondary { color: #374151; }
+
+    /* Professional cards */
+    .professional-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s ease;
+    }
+
+    .professional-card:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
+    }
+
+    /* Professional buttons */
+    .professional-btn {
+      background-color: #1e40af;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      padding: 12px 24px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .professional-btn:hover {
+      background-color: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+      color: white;
+    }
+
+    .professional-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.2);
+    }
+
+    /* Secondary button */
+    .professional-btn-secondary {
+      background-color: #6b7280;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      padding: 12px 24px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .professional-btn-secondary:hover {
+      background-color: #4b5563;
+      color: white;
+    }
+
+    /* Professional input styling */
+    .professional-input {
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      background: white;
+      color: #1e293b;
+      padding: 14px 16px;
+      transition: all 0.2s ease;
+      font-size: 16px;
+    }
+
+    .professional-input:focus {
+      border-color: #1e40af;
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+      outline: none;
+    }
+
+    .professional-input::placeholder {
+      color: #9ca3af;
+    }
+
+    /* Header styling */
+    .legal-header {
+      background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+      position: relative;
+    }
+
+    .legal-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+    }
+
+    /* Widget container styling */
     .widget-container {
       max-width: 600px;
-      min-height: 250px;
-      margin: 0 auto;                /* Centra il container nella pagina */
-      position: relative !important; /* Mantiene la compatibilità col widget */
-      display: flex;                 
-      align-items: flex-start;       /* Posiziona il widget in alto */
-      justify-content: center;       /* Centra orizzontalmente */
+      min-height: 300px;
+      margin: 0 auto;
+      position: relative !important;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 24px;
+      border: 2px solid #e2e8f0;
     }
 
-    @media only screen and (max-width: 768px) {
-      .widget-container {
-        width: 90%;
-        min-height: auto;  /* su mobile l'altezza può ridursi */
-      }
-    }
-
-    /* Rimuoviamo i posizionamenti assoluti dal widget */
     elevenlabs-convai {
       position: static !important;
       top: 0 !important;
       left: 0 !important;
       transform: none !important;
       margin: 0 auto !important;
-      /* Se desideri che il widget riempia tutto lo spazio del container,
-         togli i commenti alle due righe seguenti:
-         width: 100% !important;
-         height: 100% !important;
-      */
+    }
+
+    /* Response styling */
+    .response-card {
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      border-left: 4px solid;
+    }
+
+    .response-success {
+      background-color: #f0fdf4;
+      border-left-color: #16a34a;
+      color: #166534;
+    }
+
+    .response-loading {
+      background-color: #eff6ff;
+      border-left-color: #2563eb;
+      color: #1d4ed8;
+    }
+
+    .response-error {
+      background-color: #fef2f2;
+      border-left-color: #dc2626;
+      color: #991b1b;
+    }
+
+    /* Professional badge */
+    .legal-badge {
+      background-color: #1e40af;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Section headers */
+    .section-header {
+      border-bottom: 3px solid #1e40af;
+      padding-bottom: 8px;
+      margin-bottom: 24px;
+    }
+
+    /* Loading animation */
+    .loading-dots::after {
+      content: '';
+      animation: dots 2s infinite;
+    }
+
+    @keyframes dots {
+      0% { content: ''; }
+      25% { content: '.'; }
+      50% { content: '..'; }
+      75% { content: '...'; }
+      100% { content: ''; }
+    }
+
+    /* Subtle animations */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Professional info boxes */
+    .info-box {
+      background-color: #f1f5f9;
+      border-left: 4px solid #1e40af;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    /* Responsive adjustments */
+    @media only screen and (max-width: 768px) {
+      .widget-container {
+        width: 95%;
+        min-height: auto;
+        padding: 16px;
+      }
+
+      .professional-card {
+        margin: 0 8px;
+      }
     }
   </style>
 </head>
-<body class="bg-gray-50">
-  <!-- Ridotto il margine verticale principale da my-8 a my-4 -->
-  <div class="max-w-5xl mx-auto my-4 px-4">
-    <!-- Titolo principale -->
-    <h1 class="text-center text-4xl font-bold mb-6">Assistente Legale</h1>
-    
-    <!-- Sezione Q&A -->
-    <section id="qa-section">
-      <h2 class="text-2xl font-semibold mb-4">Fai una domanda su questioni legali, contratti, normative, ecc.</h2>
-      <form id="qa-form">
-        <div class="mb-4">
-          <label for="userInput" class="block text-gray-700 font-medium mb-1">
-            Inserisci la tua domanda qui
+<body>
+
+  <!-- PROFESSIONAL HEADER -->
+  <header class="legal-header text-white py-12 shadow-lg">
+    <div class="max-w-7xl mx-auto text-center px-4 relative z-10">
+      <div class="flex justify-center mb-6">
+        <div class="bg-white bg-opacity-20 rounded-full p-4">
+          <i class="fas fa-balance-scale text-4xl"></i>
+        </div>
+      </div>
+      <h1 class="text-4xl font-bold mb-3">
+        Assistente Legale Professionale
+      </h1>
+      <p class="text-xl opacity-90 mb-6 max-w-3xl mx-auto">
+        Consulenza legale basata su intelligenza artificiale. Ottieni risposte precise e affidabili per le tue questioni legali.
+      </p>
+      <div class="flex justify-center flex-wrap gap-6">
+        <div class="legal-badge">
+          <i class="fas fa-clock mr-2"></i>
+          Disponibile 24/7
+        </div>
+        <div class="legal-badge">
+          <i class="fas fa-shield-alt mr-2"></i>
+          Sicuro e Confidenziale
+        </div>
+        <div class="legal-badge">
+          <i class="fas fa-language mr-2"></i>
+          Multilingue
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-7xl mx-auto my-8 px-4 space-y-8">
+
+    <!-- Q&A Section -->
+    <section class="professional-card p-8 fade-in">
+      <div class="section-header">
+        <div class="flex items-center">
+          <i class="fas fa-question-circle text-2xl text-legal-primary mr-3"></i>
+          <div>
+            <h2 class="text-2xl font-bold text-legal-secondary mb-1">Consulenza Legale</h2>
+            <p class="text-gray-600">Poni le tue domande e ricevi risposte basate su fonti giuridiche autorevoli</p>
+          </div>
+        </div>
+      </div>
+      
+      <form id="qa-form" class="space-y-6">
+        <div>
+          <label for="userInput" class="block text-legal-secondary font-medium mb-2 text-sm uppercase tracking-wide">
+            Domanda Legale
           </label>
           <input 
             type="text" 
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-            id="userInput" 
-            placeholder="La tua domanda">
+            id="userInput"
+            placeholder="Esempio: Quali sono i requisiti per registrare un marchio in Italia?"
+            class="w-full professional-input"
+          >
         </div>
         <button 
           type="submit" 
-          class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded">
-          Invia
+          class="professional-btn"
+        >
+          <i class="fas fa-search mr-2"></i>
+          Ottieni Consulenza
         </button>
       </form>
-      <div id="qa-response" class="mt-4"></div>
+      <div id="qa-response" class="mt-6"></div>
     </section>
-    
-    <!-- Ridotto il margine dell'HR da my-8 a my-4 -->
-    <hr class="my-4 border-t border-gray-300">
-    
-    <!-- Sezione Agent Conversazionale ElevenLabs -->
-    <!-- Ridotto il margin-bottom da mb-8 a mb-4 -->
-    <section id="elevenlabs-section" class="mb-4">
-      <h2 class="text-center text-2xl font-semibold mb-2">Agent Conversazionale ElevenLabs</h2>
-      <!-- Wrapper per centrare il widget sotto il titolo -->
-      <!-- Ridotto il margine verticale da my-4 a my-2 -->
-      <div class="flex justify-center my-2">
+
+    <!-- ElevenLabs Widget -->
+    <section class="professional-card p-8 fade-in">
+      <div class="section-header">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <i class="fas fa-microphone text-2xl text-legal-primary mr-3"></i>
+            <div>
+              <h2 class="text-2xl font-bold text-legal-secondary mb-1">Consulenza Vocale</h2>
+              <p class="text-gray-600">Interagisci vocalmente con il nostro assistente legale AI</p>
+            </div>
+          </div>
+          <div class="legal-badge">
+            <i class="fas fa-robot mr-2"></i>
+            AI Powered
+          </div>
+        </div>
+      </div>
+      
+      <div class="info-box mb-6">
+        <div class="flex items-center">
+          <i class="fas fa-info-circle text-legal-primary mr-2"></i>
+          <span class="font-medium">Clicca sul pulsante del microfono per iniziare la conversazione vocale</span>
+        </div>
+      </div>
+      
+      <div class="flex justify-center mb-6">
         <div class="widget-container" id="widget-container">
-          <!-- Il widget verrà inserito qui -->
           <elevenlabs-convai agent-id="vE96ET0MG8Jlv2jZA5cq"></elevenlabs-convai>
         </div>
       </div>
-      <!-- Script del widget ElevenLabs -->
-      <script src="https://elevenlabs.io/convai-widget/index.js" async></script>
-    </section>
-    
-    <!-- Ridotto il margine dell'HR da my-8 a my-4 -->
-    <hr class="my-4 border-t border-gray-300">
-    
-    <!-- Sezione Transcript e Estrazione Contatti -->
-    <!-- Puoi anche rimuovere del tutto la classe mb-8 o ridurla a mb-2, se necessario -->
-    <section id="transcript-section" class="mb-4">
-      <h2 class="text-2xl font-semibold mb-4">Transcript e Estrazione Contatti</h2>
-      <div class="flex flex-wrap -mx-3">
-        <!-- Colonna Transcript -->
-        <div class="w-full md:w-1/2 px-3 mb-3">
-          <button 
-            id="btnRetrieve" 
-            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded mb-3">
-            Recupera conversazione
-          </button>
-          <div id="transcript-display"></div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+        <div class="flex items-center justify-center p-3 bg-gray-50 rounded-lg">
+          <i class="fas fa-language text-legal-primary mr-2"></i>
+          <span class="text-sm text-gray-700">Supporto Multilingue</span>
         </div>
-        <!-- Colonna Estrazione Contatti -->
-        <div class="w-full md:w-1/2 px-3 mb-3">
-          <button 
-            id="btnExtract" 
-            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded mb-3">
-            Estrai contatti e informazioni
-          </button>
-          <div id="contact-display"></div>
+        <div class="flex items-center justify-center p-3 bg-gray-50 rounded-lg">
+          <i class="fas fa-brain text-legal-primary mr-2"></i>
+          <span class="text-sm text-gray-700">IA Avanzata</span>
+        </div>
+        <div class="flex items-center justify-center p-3 bg-gray-50 rounded-lg">
+          <i class="fas fa-lock text-legal-primary mr-2"></i>
+          <span class="text-sm text-gray-700">Confidenziale</span>
         </div>
       </div>
+      
+      <script src="https://elevenlabs.io/convai-widget/index.js" async></script>
     </section>
-  </div>
-  
-  <!-- Bootstrap JS Bundle -->
+
+    <!-- Transcript & Contatti -->
+    <section class="professional-card p-8 fade-in">
+      <div class="section-header">
+        <div class="flex items-center">
+          <i class="fas fa-file-alt text-2xl text-legal-primary mr-3"></i>
+          <div>
+            <h2 class="text-2xl font-bold text-legal-secondary mb-1">Gestione Documenti</h2>
+            <p class="text-gray-600">Visualizza trascrizioni delle conversazioni ed estrai informazioni di contatto</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Transcript -->
+        <div>
+          <h3 class="text-lg font-semibold text-legal-secondary mb-4 flex items-center">
+            <i class="fas fa-comments text-legal-primary mr-2"></i>
+            Trascrizione Conversazione
+          </h3>
+          <button 
+            id="btnRetrieve" 
+            class="w-full professional-btn-secondary mb-4"
+          >
+            <i class="fas fa-download mr-2"></i>
+            Recupera Conversazione
+          </button>
+          <div id="transcript-display" class="bg-gray-50 rounded-lg p-4 min-h-[120px] border border-gray-200"></div>
+        </div>
+        
+        <!-- Contatti -->
+        <div>
+          <h3 class="text-lg font-semibold text-legal-secondary mb-4 flex items-center">
+            <i class="fas fa-address-book text-legal-primary mr-2"></i>
+            Estrazione Contatti
+          </h3>
+          <button 
+            id="btnExtract" 
+            class="w-full professional-btn-secondary mb-4"
+          >
+            <i class="fas fa-user-plus mr-2"></i>
+            Estrai Informazioni
+          </button>
+          <div id="contact-display" class="bg-gray-50 rounded-lg p-4 min-h-[120px] border border-gray-200"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PROFESSIONAL FOOTER -->
+  <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+    <div class="max-w-7xl mx-auto text-center px-4">
+      <div class="flex justify-center items-center mb-4">
+        <i class="fas fa-balance-scale text-2xl mr-3"></i>
+        <span class="text-xl font-semibold">Assistente Legale Professionale</span>
+      </div>
+      <p class="mb-4">© 2025 - Servizio di consulenza legale basato su intelligenza artificiale</p>
+      <div class="flex justify-center space-x-8 text-sm">
+        <div class="flex items-center">
+          <i class="fas fa-shield-alt mr-2"></i>
+          Sicurezza Garantita
+        </div>
+        <div class="flex items-center">
+          <i class="fas fa-user-shield mr-2"></i>
+          Privacy Protetta
+        </div>
+        <div class="flex items-center">
+          <i class="fas fa-certificate mr-2"></i>
+          Fonti Verificate
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- Script per gestire le chiamate al backend -->
+
   <script>
-    // Gestione del form Q&A
+    // Professional Q&A form handler
     document.getElementById('qa-form').addEventListener('submit', function(e) {
       e.preventDefault();
       const userInput = document.getElementById('userInput').value.trim();
       if (!userInput) return;
       
-      document.getElementById('qa-response').innerHTML = '<div class="bg-blue-100 text-blue-700 p-3 rounded">Generazione della risposta...</div>';
+      const responseDiv = document.getElementById('qa-response');
+      responseDiv.innerHTML = `
+        <div class="response-card response-loading">
+          <div class="flex items-center">
+            <i class="fas fa-cog fa-spin mr-3"></i>
+            <span>Elaborazione della richiesta in corso<span class="loading-dots"></span></span>
+          </div>
+        </div>
+      `;
       
       fetch('/api/qa', {
         method: 'POST',
@@ -142,61 +471,135 @@
       .then(data => {
         let sourcesHTML = '';
         if (data.sources && Object.keys(data.sources).length > 0) {
-          sourcesHTML += '<h5 class="font-semibold mt-4">Fonti:</h5><ul class="list-disc ml-5">';
+          sourcesHTML += `
+            <div class="mt-4 pt-4 border-t border-gray-200">
+              <h5 class="font-semibold text-gray-800 mb-3 flex items-center">
+                <i class="fas fa-book-open mr-2"></i>
+                Fonti di riferimento:
+              </h5>
+              <ul class="space-y-2">
+          `;
           for (const [source, occs] of Object.entries(data.sources)) {
             let occText = occs.map(([p, l]) => {
               let str = "";
-              if (p) str += `pagina ${p}`;
+              if (p) str += `pag. ${p}`;
               if (l) str += (str ? ", " : "") + `riga ${l}`;
               return str;
             }).join(" - ");
-            sourcesHTML += `<li><a class="text-blue-600 hover:underline" href="${source}" target="_blank">${source}</a> ${occText ? "(" + occText + ")" : ""}</li>`;
+            sourcesHTML += `
+              <li class="flex items-start">
+                <i class="fas fa-external-link-alt mt-1 mr-2 text-blue-600 text-sm"></i>
+                <div>
+                  <a class="text-blue-600 hover:text-blue-800 underline font-medium" href="${source}" target="_blank">
+                    ${source.split('/').pop() || source}
+                  </a>
+                  ${occText ? `<span class="text-gray-500 text-sm ml-2">(${occText})</span>` : ""}
+                </div>
+              </li>
+            `;
           }
-          sourcesHTML += '</ul>';
+          sourcesHTML += '</ul></div>';
         }
-        document.getElementById('qa-response').innerHTML =
-          `<div class="bg-green-100 text-green-700 p-3 rounded"><strong>A:</strong> ${data.answer}</div>` +
-          sourcesHTML;
+        
+        responseDiv.innerHTML = `
+          <div class="response-card response-success">
+            <div class="flex items-start">
+              <i class="fas fa-check-circle mr-3 mt-1"></i>
+              <div class="flex-1">
+                <h4 class="font-semibold mb-2">Risposta:</h4>
+                <div class="prose text-gray-700">${data.answer}</div>
+                ${sourcesHTML}
+              </div>
+            </div>
+          </div>
+        `;
       })
       .catch(err => {
         console.error(err);
-        document.getElementById('qa-response').innerHTML = '<div class="bg-red-100 text-red-700 p-3 rounded">Si è verificato un errore.</div>';
+        responseDiv.innerHTML = `
+          <div class="response-card response-error">
+            <div class="flex items-center">
+              <i class="fas fa-exclamation-triangle mr-3"></i>
+              <span>Si è verificato un errore durante l'elaborazione. Riprova più tardi.</span>
+            </div>
+          </div>
+        `;
       });
     });
 
-    // Recupera il transcript dalla conversazione ElevenLabs
+    // Professional transcript retrieval
     document.getElementById('btnRetrieve').addEventListener('click', function() {
       const transcriptDiv = document.getElementById('transcript-display');
-      transcriptDiv.innerHTML = '<div class="bg-blue-100 text-blue-700 p-3 rounded">Recupero conversazione...</div>';
+      transcriptDiv.innerHTML = `
+        <div class="flex items-center text-gray-600">
+          <i class="fas fa-spinner fa-spin mr-2"></i>
+          <span>Caricamento conversazione<span class="loading-dots"></span></span>
+        </div>
+      `;
       
       fetch('/api/transcript')
       .then(response => response.json())
       .then(data => {
-        transcriptDiv.innerHTML = data.transcript_html;
+        transcriptDiv.innerHTML = `
+          <div class="space-y-3">
+            <div class="flex items-center text-green-700 text-sm font-medium">
+              <i class="fas fa-check-circle mr-2"></i>
+              Conversazione caricata con successo
+            </div>
+            <div class="bg-white rounded border p-3 max-h-60 overflow-y-auto">
+              ${data.transcript_html}
+            </div>
+          </div>
+        `;
       })
       .catch(err => {
         console.error(err);
-        transcriptDiv.innerHTML = '<div class="bg-red-100 text-red-700 p-3 rounded">Errore nel recupero della conversazione.</div>';
+        transcriptDiv.innerHTML = `
+          <div class="flex items-center text-red-600">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <span>Errore nel caricamento della conversazione</span>
+          </div>
+        `;
       });
     });
 
-    // Estrazione dei contatti dalla conversazione
+    // Professional contact extraction
     document.getElementById('btnExtract').addEventListener('click', function() {
       const contactDiv = document.getElementById('contact-display');
-      contactDiv.innerHTML = '<div class="bg-blue-100 text-blue-700 p-3 rounded">Estrazione contatti in corso...</div>';
+      contactDiv.innerHTML = `
+        <div class="flex items-center text-gray-600">
+          <i class="fas fa-spinner fa-spin mr-2"></i>
+          <span>Estrazione in corso<span class="loading-dots"></span></span>
+        </div>
+      `;
       
       fetch('/api/extract_contacts')
       .then(response => response.json())
       .then(data => {
-        contactDiv.innerHTML = `<div class="bg-green-100 text-green-700 p-3 rounded">${data.contact_info}</div>`;
+        contactDiv.innerHTML = `
+          <div class="space-y-3">
+            <div class="flex items-center text-green-700 text-sm font-medium">
+              <i class="fas fa-check-circle mr-2"></i>
+              Estrazione completata
+            </div>
+            <div class="bg-white rounded border p-3">
+              ${data.contact_info}
+            </div>
+          </div>
+        `;
       })
       .catch(err => {
         console.error(err);
-        contactDiv.innerHTML = '<div class="bg-red-100 text-red-700 p-3 rounded">Errore durante l\'estrazione dei contatti.</div>';
+        contactDiv.innerHTML = `
+          <div class="flex items-center text-red-600">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <span>Errore durante l'estrazione</span>
+          </div>
+        `;
       });
     });
-    
-    // Al termine del caricamento, forziamo il widget a rimanere nel container
+
+    // Widget positioning
     window.addEventListener('load', () => {
       const widget = document.querySelector('elevenlabs-convai');
       const container = document.getElementById('widget-container');
